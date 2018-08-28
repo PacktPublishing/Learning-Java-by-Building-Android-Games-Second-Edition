@@ -56,7 +56,7 @@ We also provide a PDF file that has color images of the screenshots/diagrams use
 ### Related products <Other books you may enjoy>
 * Mastering Firebase for Android Development [[Packt]](https://www.packtpub.com/web-development/mastering-firebase) [[Amazon]](https://www.amazon.com/dp/1788624718)
 
-  * Android Design Patterns and Best Practice [[Packt]](https://www.packtpub.com/web-development/android-design-patterns-and-best-practice) [[Amazon]](https://www.amazon.com/dp/1786467216)
+* Android Design Patterns and Best Practice [[Packt]](https://www.packtpub.com/web-development/android-design-patterns-and-best-practice) [[Amazon]](https://www.amazon.com/dp/1786467216)
 
 ## Get to Know the Author(s)
 **Author Name**
