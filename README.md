@@ -58,7 +58,7 @@ We also provide a PDF file that has color images of the screenshots/diagrams use
 
 * Android Design Patterns and Best Practice [[Packt]](https://www.packtpub.com/web-development/android-design-patterns-and-best-practice) [[Amazon]](https://www.amazon.com/dp/1786467216)
 
-## Get to Know the Author(s)
+## Get to Know the Author
 **Author Name**
 John Horton
 
