@@ -1,8 +1,3 @@
-## $5 Tech Unlocked 2021!
-[Buy and download this product for only $5 on PacktPub.com](https://www.packtpub.com/)
------
-*The $5 campaign         runs from __December 15th 2020__ to __January 13th 2021.__*
-
 # Learning Java by Building Android Games
 
 <a href="https://www.packtpub.com/game-development/learning-java-9-building-android-games-second-edition"><img src="https://www.packtpub.com/sites/default/files/B09770_MockupCover.png" alt="Learning Java by Building Android Games" height="256px" align="right"></a>
