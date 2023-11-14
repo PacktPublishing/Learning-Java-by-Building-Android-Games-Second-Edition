@@ -1,1 +1,0 @@
-This is all the code and assets covering chapter 22 and chapter 23
