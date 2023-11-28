@@ -16,6 +16,37 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import java.io.IOException;
 
+// added the audio class for strategy implementation
+public interface Audio {
+    void playEatSound();
+    void playCrashSound();
+}
+
+// added the default audio class for strategy implementation
+public class DefaultAudio implements Audio {
+    private SoundPool soundPool;
+    private int eatSoundId;
+    private int crashSoundId;
+
+    public DefaultAudio(SoundPool soundPool, int eatSoundId, int crashSoundId) {
+        this.soundPool = soundPool;
+        this.eatSoundId = eatSoundId;
+        this.crashSoundId = crashSoundId;
+    }
+
+    @Override
+    public void playEatSound() {
+        soundPool.play(eatSoundId, 1, 1, 0, 0, 1);
+    }
+
+    @Override
+    public void playCrashSound() {
+        soundPool.play(crashSoundId, 1, 1, 0, 0, 1);
+    }
+}
+
+
+
 class SnakeGame extends SurfaceView implements Runnable{
 
     // Objects for the game loop/thread
@@ -47,11 +78,21 @@ class SnakeGame extends SurfaceView implements Runnable{
     private Snake mSnake;
     // And an apple
     private Apple mApple;
+	
+	// adding reference to audio
+	private Audio audio;
+
+	// added the audio class for strategy implementation
+	public interface Audio {
+		void playEatSound();
+		void playCrashSound();
+	}
+
 
 
     // This is the constructor method that gets called
     // from SnakeActivity
-    public SnakeGame(Context context, Point size) {
+    public SnakeGame(Context context, Point size, Audio audio) {
         super(context);
 
         // Work out how many pixels each block is
@@ -60,29 +101,18 @@ class SnakeGame extends SurfaceView implements Runnable{
         mNumBlocksHigh = size.y / blockSize;
 
         // Initialize the SoundPool
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_MEDIA)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                    .build();
-
-            mSP = new SoundPool.Builder()
-                    .setMaxStreams(5)
-                    .setAudioAttributes(audioAttributes)
-                    .build();
-        } else {
-            mSP = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
-        }
         try {
             AssetManager assetManager = context.getAssets();
             AssetFileDescriptor descriptor;
 
-            // Prepare the sounds in memory
+            // Prepare the sounds in mem
             descriptor = assetManager.openFd("get_apple.ogg");
             mEat_ID = mSP.load(descriptor, 0);
 
             descriptor = assetManager.openFd("snake_death.ogg");
             mCrashID = mSP.load(descriptor, 0);
+
+            this.audio = audio;
 
         } catch (IOException e) {
             // Error
@@ -179,14 +209,14 @@ class SnakeGame extends SurfaceView implements Runnable{
             // Add to  mScore
             mScore = mScore + 1;
 
-            // Play a sound
-            mSP.play(mEat_ID, 1, 1, 0, 0, 1);
+            // play the new eat sound
+            audio.playEatSound();
         }
 
         // Did the snake die?
         if (mSnake.detectDeath()) {
-            // Pause the game ready to start again
-            mSP.play(mCrashID, 1, 1, 0, 0, 1);
+            // play the new crash sound using strategy ;)
+            audio.playCrashSound();
 
             mPaused =true;
         }
