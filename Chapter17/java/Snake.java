@@ -55,22 +55,15 @@ class Snake {
         mMoveRange = mr;
 
         // Create and scale the bitmaps
-        mBitmapHeadRight = BitmapFactory
-                .decodeResource(context.getResources(),
-                        R.drawable.head);
+        mBitmapHeadRight = createVersion(context, "head");
 
         // Create 3 more versions of the head for different headings
-        mBitmapHeadLeft = BitmapFactory
-                .decodeResource(context.getResources(),
-                        R.drawable.head);
+        //Separated the creating of different versions to improve readability and redundancy
+        mBitmapHeadLeft = createVersion(context, "head");
 
-        mBitmapHeadUp = BitmapFactory
-                .decodeResource(context.getResources(),
-                        R.drawable.head);
+        mBitmapHeadUp = createVersion(context, "head");
 
-        mBitmapHeadDown = BitmapFactory
-                .decodeResource(context.getResources(),
-                        R.drawable.head);
+        mBitmapHeadDown = createVersion(context, "head");
 
         // Modify the bitmaps to face the snake head
         // in the correct direction
@@ -82,27 +75,19 @@ class Snake {
         Matrix matrix = new Matrix();
         matrix.preScale(-1, 1);
 
-        mBitmapHeadLeft = Bitmap
-                .createBitmap(mBitmapHeadRight,
-                        0, 0, ss, ss, matrix, true);
+        mBitmapHeadLeft = modifySnakeHead(ss, matrix);
 
         // A matrix for rotating
         matrix.preRotate(-90);
-        mBitmapHeadUp = Bitmap
-                .createBitmap(mBitmapHeadRight,
-                        0, 0, ss, ss, matrix, true);
+        mBitmapHeadUp = modifySnakeHead(ss, matrix);
 
         // Matrix operations are cumulative
         // so rotate by 180 to face down
         matrix.preRotate(180);
-        mBitmapHeadDown = Bitmap
-                .createBitmap(mBitmapHeadRight,
-                        0, 0, ss, ss, matrix, true);
+        mBitmapHeadDown = modifySnakeHead(ss, matrix);
 
         // Create and scale the body
-        mBitmapBody = BitmapFactory
-                .decodeResource(context.getResources(),
-                        R.drawable.body);
+        mBitmapBody = createVersion(context, "body");
 
         mBitmapBody = Bitmap
                 .createScaledBitmap(mBitmapBody,
@@ -111,6 +96,21 @@ class Snake {
         // The halfway point across the screen in pixels
         // Used to detect which side of screen was pressed
         halfWayPoint = mr.x * ss / 2;
+    }
+    private Bitmap createVersion(Context context, String drawing){
+        switch(drawing){
+            case "head":
+                return BitmapFactory.decodeResource(context.getResources(), R.drawable.head);
+        }
+        return BitmapFactory.decodeResource(context.getResources(), R.drawable.body);
+    }
+    private Bitmap modifySnakeHead(int ss, Matrix matrix){
+        return Bitmap.createBitmap(mBitmapHeadRight,
+                0, 0, ss, ss, matrix, true);
+    }
+
+    public int getSegmentSize(){
+        return mSegmentSize;
     }
 
     // Get the snake ready for a new game
