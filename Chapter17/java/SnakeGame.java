@@ -123,10 +123,12 @@ class SnakeGame extends SurfaceView implements Runnable{
         mPaint = new Paint();
 
         // Call the constructors of our two game objects
-        mApple = new Apple(context,
-                new Point(NUM_BLOCKS_WIDE,
-                        mNumBlocksHigh),
-                blockSize);
+        mApple = new Apple.AppleBuilder(context)
+                .setSpawnRange(new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh))
+                .setSize(blockSize)
+                .setBitmap(context, R.drawable.apple)
+                .build();
+
 
         mSnake = new Snake(context,
                 new Point(NUM_BLOCKS_WIDE,
@@ -143,7 +145,11 @@ class SnakeGame extends SurfaceView implements Runnable{
         mSnake.reset(NUM_BLOCKS_WIDE, mNumBlocksHigh);
 
         // Get the apple ready for dinner
-        mApple.spawn();
+        mApple = new Apple.AppleBuilder(getContext())
+                .setSpawnRange(new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh))
+                .setSize(blockSize)
+                .setBitmap(getContext(), R.drawable.apple)
+                .build();
 
         // Reset the mScore
         mScore = 0;
