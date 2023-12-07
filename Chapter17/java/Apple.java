@@ -9,8 +9,9 @@ import android.graphics.Point;
 import java.util.Random;
 
 public class Apple {
-
+    // The location of the apple
     private Point location = new Point();
+
     private Bitmap mBitmapApple;
 
     // Private constructor to enforce the use of the builder
@@ -43,6 +44,11 @@ public class Apple {
         private Point mSpawnRange;
         private int mSize;
         private Bitmap mBitmapApple;
+
+        // Constructor to initialize context parameter
+        public AppleBuilder(Context context) {
+            mBitmapApple = BitmapFactory.decodeResource(context.getResources(), R.drawable.apple);
+        }
 
         public AppleBuilder setSpawnRange(Point spawnRange) {
             mSpawnRange = spawnRange;
