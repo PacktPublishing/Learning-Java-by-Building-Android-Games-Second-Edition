@@ -1,10 +1,8 @@
-package com.gamecodeschool.CSC133final;
+package com.gamecodeschool.csc133finalproject;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.Point;
 import java.util.Random;
 

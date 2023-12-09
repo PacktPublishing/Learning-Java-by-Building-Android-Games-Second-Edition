@@ -1,4 +1,4 @@
-package com.gamecodeschool.c17snake;
+package com.gamecodeschool.csc133finalproject;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
@@ -7,44 +7,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.media.AudioAttributes;
-import android.media.AudioManager;
 import android.media.SoundPool;
-import android.os.Build;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import java.io.IOException;
-
-// added the audio class for strategy implementation
-public interface Audio {
-    void playEatSound();
-    void playCrashSound();
-}
-
-// added the default audio class for strategy implementation
-public class DefaultAudio implements Audio {
-    private SoundPool soundPool;
-    private int eatSoundId;
-    private int crashSoundId;
-
-    public DefaultAudio(SoundPool soundPool, int eatSoundId, int crashSoundId) {
-        this.soundPool = soundPool;
-        this.eatSoundId = eatSoundId;
-        this.crashSoundId = crashSoundId;
-    }
-
-    @Override
-    public void playEatSound() {
-        soundPool.play(eatSoundId, 1, 1, 0, 0, 1);
-    }
-
-    @Override
-    public void playCrashSound() {
-        soundPool.play(crashSoundId, 1, 1, 0, 0, 1);
-    }
-}
-
 
 
 class SnakeGame extends SurfaceView implements Runnable{
@@ -123,7 +90,7 @@ class SnakeGame extends SurfaceView implements Runnable{
         mPaint = new Paint();
 
         // Call the constructors of our two game objects
-        mApple = new Apple.AppleBuilder(context)
+        mApple = new Apple.AppleBuilder()
                 .setSpawnRange(new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh))
                 .setSize(blockSize)
                 .setBitmap(context, R.drawable.apple)
@@ -145,7 +112,7 @@ class SnakeGame extends SurfaceView implements Runnable{
         mSnake.reset(NUM_BLOCKS_WIDE, mNumBlocksHigh);
 
         // Get the apple ready for dinner
-        mApple = new Apple.AppleBuilder(getContext())
+        mApple = new Apple.AppleBuilder()
                 .setSpawnRange(new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh))
                 .setSize(blockSize)
                 .setBitmap(getContext(), R.drawable.apple)
