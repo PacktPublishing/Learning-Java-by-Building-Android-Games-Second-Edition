@@ -1,4 +1,4 @@
-package com.gamecodeschool.c17snake;
+package com.gamecodeschool.CSC133final;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -8,17 +8,17 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import java.util.Random;
 
-public class Apple {
-    // The location of the apple
-    private Point location = new Point();
+public class Apple extends GameObject{
 
+    private Point location = new Point();
     private Bitmap mBitmapApple;
 
     // Private constructor to enforce the use of the builder
     private Apple(Point spawnRange, int size, Bitmap bitmapApple) {
+        super(spawnRange, size, bitmapApple);
         location.x = -10; // Hide the apple off-screen until the game starts
-        mBitmapApple = bitmapApple;
-        mBitmapApple = Bitmap.createScaledBitmap(mBitmapApple, size, size, false);
+        mbitmapobject = bitmapApple;
+        mbitmapobject = Bitmap.createScaledBitmap(mbitmapobject, size, size, false);
     }
 
     // This is called every time an apple is eaten
@@ -33,22 +33,11 @@ public class Apple {
     Point getLocation() {
         return location;
     }
-
-    // Draw the apple
-    void draw(Canvas canvas, Paint paint) {
-        canvas.drawBitmap(mBitmapApple, location.x * mBitmapApple.getWidth(), location.y * mBitmapApple.getHeight(), paint);
-    }
-
     // Builder class for Apple
     public static class AppleBuilder {
         private Point mSpawnRange;
         private int mSize;
         private Bitmap mBitmapApple;
-
-        // Constructor to initialize context parameter
-        public AppleBuilder(Context context) {
-            mBitmapApple = BitmapFactory.decodeResource(context.getResources(), R.drawable.apple);
-        }
 
         public AppleBuilder setSpawnRange(Point spawnRange) {
             mSpawnRange = spawnRange;
