@@ -1,4 +1,4 @@
-package com.gamecodeschool.csc133finalproject;
+package com.gamecodeschool.c17snake;
 
 import android.media.SoundPool;
 

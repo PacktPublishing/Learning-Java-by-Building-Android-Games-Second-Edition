@@ -1,4 +1,4 @@
-package com.gamecodeschool.csc133finalproject;
+package com.gamecodeschool.c17snake;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
@@ -49,6 +49,7 @@ class SnakeGame extends SurfaceView implements Runnable{
 	// adding reference to audio
 	private Audio audio;
 
+
 	// added the audio class for strategy implementation
 	public interface Audio {
 		void playEatSound();
@@ -61,7 +62,7 @@ class SnakeGame extends SurfaceView implements Runnable{
     // from SnakeActivity
     public SnakeGame(Context context, Point size, Audio audio) {
         super(context);
-
+        mSP = new SoundPool.Builder().build();
         // Work out how many pixels each block is
         int blockSize = size.x / NUM_BLOCKS_WIDE;
         // How many blocks of the same size will fit into the height
@@ -110,13 +111,9 @@ class SnakeGame extends SurfaceView implements Runnable{
 
         // reset the snake
         mSnake.reset(NUM_BLOCKS_WIDE, mNumBlocksHigh);
-
+        Point spawnPoint = new Point(2, 2);
         // Get the apple ready for dinner
-        mApple = new Apple.AppleBuilder()
-                .setSpawnRange(new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh))
-                .setSize(blockSize)
-                .setBitmap(getContext(), R.drawable.apple)
-                .build();
+        mApple.spawn(spawnPoint);
 
         // Reset the mScore
         mScore = 0;
@@ -177,7 +174,8 @@ class SnakeGame extends SurfaceView implements Runnable{
         if(mSnake.checkDinner(mApple.getLocation())){
             // This reminds me of Edge of Tomorrow.
             // One day the apple will be ready!
-            mApple.spawn();
+            Point spawnPoint = new Point(2, 2);
+            mApple.spawn(spawnPoint);
 
             // Add to  mScore
             mScore = mScore + 1;

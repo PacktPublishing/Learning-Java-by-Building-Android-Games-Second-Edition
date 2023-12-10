@@ -1,4 +1,4 @@
-package com.gamecodeschool.csc133finalproject;
+package com.gamecodeschool.c17snake;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,7 +8,6 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.view.MotionEvent;
 
-import com.gamecodeschool.csc133final.R;
 
 import java.util.ArrayList;
 
@@ -99,7 +98,7 @@ class Snake extends GameObject {
         }
 
 
-    }
+
     Snake(Context context, Point mr, int ss, Bitmap mbitmap) {
         super(mr, ss, mbitmap);
 
