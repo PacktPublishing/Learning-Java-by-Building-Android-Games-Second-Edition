@@ -1,5 +1,4 @@
-package com.gamecodeschool.c17snake;
-
+package com.gamecodeschoolc17.workingsnake;
 import android.media.SoundPool;
 
 // added the default audio class for strategy implementation

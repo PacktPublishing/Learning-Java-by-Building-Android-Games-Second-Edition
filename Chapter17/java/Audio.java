@@ -1,4 +1,4 @@
-package com.gamecodeschool.c17snake;
+package com.gamecodeschoolc17.workingsnake;
 
 // added the audio class for strategy implementation
 public interface Audio {
