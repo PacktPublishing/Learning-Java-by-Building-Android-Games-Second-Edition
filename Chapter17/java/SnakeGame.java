@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.media.SoundPool;
+import android.media.MediaPlayer;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -31,6 +32,10 @@ class SnakeGame extends SurfaceView implements Runnable{
     private SoundPool mSP;
     private int mEat_ID = -1;
     private int mCrashID = -1;
+    private int mGameOverID = -1;
+
+    //for playing background music
+    private MediaPlayer mediaBackground;
 
     // The size in segments of the playable area
     private final int NUM_BLOCKS_WIDE = 40;
@@ -102,6 +107,9 @@ class SnakeGame extends SurfaceView implements Runnable{
             descriptor = assetManager.openFd("snake_death.ogg");
             mCrashID = mSP.load(descriptor, 0);
 
+            descriptor = assetManager.openFd("gameOver.ogg");
+            mGameOverID = mSP.load(descriptor, 0);
+
             this.audio = audio;
 
         } catch (IOException e) {
@@ -144,6 +152,9 @@ class SnakeGame extends SurfaceView implements Runnable{
                 new Point(NUM_BLOCKS_WIDE,
                         mNumBlocksHigh),
                 blockSize);
+
+        //Initializing MediaPlayer
+        mediaBackground = MediaPlayer.create(this.getContext(), R.raw.background);
 
     }
 
@@ -226,6 +237,12 @@ class SnakeGame extends SurfaceView implements Runnable{
         // Move the snake
         mSnake.move();
 
+        //checking if background music is playing
+        if(!mediaBackground.isPlaying()){
+            mediaBackground = MediaPlayer.create(this.getContext(), R.raw.background);
+            mediaBackground.start();
+        }
+
         // Did the head of the snake eat the apple?
         // Check if GoodApple was eaten
         if(mSnake.checkDinner(this.mGoodApple.location)){
@@ -289,6 +306,7 @@ class SnakeGame extends SurfaceView implements Runnable{
         if (mSnake.detectDeath()) {
             // play the new crash sound using strategy ;)
             audio.playCrashSound();
+            mSP.play(mGameOverID, 1, 1, 0, 0, 1);
 
             mPaused =true;
         }
