@@ -1,4 +1,4 @@
-package com.gamecodeschoolc17.workingsnake;
+package com.gamecodeschool.c17snake;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

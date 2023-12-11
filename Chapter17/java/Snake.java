@@ -1,4 +1,4 @@
-package com.gamecodeschoolc17.workingsnake;
+package com.gamecodeschool.c17snake;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -8,6 +8,8 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.view.MotionEvent;
+import android.os.Handler;
+import android.os.Looper;
 
 import java.util.ArrayList;
 
@@ -43,11 +45,16 @@ class Snake {
     // A bitmap for the body
     private Bitmap mBitmapBody;
 
+    // The snake's speed
+    private int speed;
 
     Snake(Context context, Point mr, int ss) {
 
         // Initialize our ArrayList
         segmentLocations = new ArrayList<>();
+
+        // Set the initial speed
+        speed = 1;
 
         // Initialize the segment size and movement
         // range from the passed in parameters
@@ -146,22 +153,40 @@ class Snake {
         // Move it appropriately
         switch (heading) {
             case UP:
-                p.y--;
+                p.y -= speed;
                 break;
 
             case RIGHT:
-                p.x++;
+                p.x += speed;
                 break;
 
             case DOWN:
-                p.y++;
+                p.y += speed;
                 break;
 
             case LEFT:
-                p.x--;
+                p.x -= speed;
                 break;
         }
 
+    }
+
+    // Consume star >> get boosted
+    private boolean isSpeedBoostActive = false;
+    void applySpeedBoost() {
+        // Increase the speed for a brief period
+        speed = 2;
+        isSpeedBoostActive = true;
+
+        // Using new imports to schedule a task to run after half a second of in-game time
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Task to reset the snake's speed
+                speed = 1;
+                isSpeedBoostActive = false;
+            }
+        }, 500); // 500 = half a second
     }
 
     boolean detectDeath() {

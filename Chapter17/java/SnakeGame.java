@@ -1,4 +1,4 @@
-package com.gamecodeschoolc17.workingsnake;
+package com.gamecodeschool.c17snake;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
@@ -53,6 +53,12 @@ class SnakeGame extends SurfaceView implements Runnable{
     // Two Apple types
     private NewApple mGoodApple;
     private NewApple mBadApple;
+
+    // adding in a star power-up!
+    private Star mStar;
+
+    // adding in obstacles
+    private Obstacle mObstacle;
 
     // Apple Builders
     private GoodAppleBuilder mGoodAppleBuilder;
@@ -122,7 +128,17 @@ class SnakeGame extends SurfaceView implements Runnable{
         this.mBadAppleBuilder = new BadAppleBuilder(mBitmapBadApple, new Point (10, 30) , new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh), blockSize);
         this.mBadApple = this.mBadAppleBuilder.returnApple();
 
+        mStar = new Star(context,
+                new Point(NUM_BLOCKS_WIDE,
+                        mNumBlocksHigh),
+                blockSize);
+        mStar.spawn();
 
+        mObstacle = new Obstacle(context,
+                new Point(NUM_BLOCKS_WIDE,
+                        mNumBlocksHigh),
+                blockSize);
+        mObstacle.spawn();
 
         mSnake = new Snake(context,
                 new Point(NUM_BLOCKS_WIDE,
@@ -153,6 +169,10 @@ class SnakeGame extends SurfaceView implements Runnable{
 
         // Reset the mScore
         mScore = 0;
+
+        // Respawn tertiary items
+        mStar.spawn();
+        mObstacle.spawn();
 
         // Setup mNextFrameTime so an update can triggered
         mNextFrameTime = System.currentTimeMillis();
@@ -251,6 +271,20 @@ class SnakeGame extends SurfaceView implements Runnable{
             mSP.play(mEat_ID, 1, 1, 0, 0, 1);
         }
 
+        // Did the head of the snake eat the star?
+        if (mSnake.checkDinner(mStar.getLocation())) {
+            mStar.spawn();  // spawn a new star
+            mSP.play(mEat_ID, 1, 1, 0, 0, 1);
+            mStar.applySpeedBoost(mSnake);  // speed booster
+            mObstacle.spawn();  // spawn new obstacle >:)
+        }
+
+        // Did the head of the snake eat the obstacle?
+        if (mSnake.checkDinner(mObstacle.getLocation())) {
+            mScore = mScore -1;
+            mObstacle.spawn();  // spawn new obstacle
+        }
+
         // Did the snake die?
         if (mSnake.detectDeath()) {
             // play the new crash sound using strategy ;)
@@ -278,10 +312,12 @@ class SnakeGame extends SurfaceView implements Runnable{
             // Draw the score
             mCanvas.drawText("" + mScore, 20, 120, mPaint);
 
-            // Draw the apple and the snake
+            // Draw the apple, snake, star, and obstacle
             this.mGoodApple.draw(mCanvas, mPaint);
             this.mBadApple.draw(mCanvas, mPaint);
             mSnake.draw(mCanvas, mPaint);
+            mStar.draw(mCanvas, mPaint);
+            mObstacle.draw(mCanvas, mPaint);
 
             // Draw some text while paused
             if(mPaused){
