@@ -1,4 +1,4 @@
-package com.gamecodeschool.c17snake;
+package com.gamecodeschool.cscfinalproject;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
@@ -14,8 +14,14 @@ import android.media.MediaPlayer;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.InputMismatchException;
 import java.util.Random;
+import java.util.Scanner;
 
 
 class SnakeGame extends SurfaceView implements Runnable{
@@ -43,6 +49,7 @@ class SnakeGame extends SurfaceView implements Runnable{
 
     // How many points does the player have
     private int mScore;
+    private int mHighScore;
     private int blockSize;
 
     Random random = new Random();
@@ -180,7 +187,18 @@ class SnakeGame extends SurfaceView implements Runnable{
 
         // Reset the mScore
         mScore = 0;
+        Scanner input = new Scanner("highscore.txt");
 
+        System.out.println(new File("highscore.txt").getAbsolutePath());
+        System.out.println("Testing");
+        try {
+
+                int test = input.nextInt();
+                mHighScore = test;
+            input.close();
+        }catch(InputMismatchException e){
+            //discards
+        }
         // Respawn tertiary items
         mStar.spawn();
         mObstacle.spawn();
@@ -305,9 +323,21 @@ class SnakeGame extends SurfaceView implements Runnable{
         // Did the snake die?
         if (mSnake.detectDeath()) {
             // play the new crash sound using strategy ;)
-            audio.playCrashSound();
+            if (audio != null) {
+                audio.playCrashSound();
+            }
             mSP.play(mGameOverID, 1, 1, 0, 0, 1);
+            if(mScore > mHighScore){
+                mHighScore = mScore;
 
+                try {
+                    FileWriter output = new FileWriter("HighScore.txt");
+                    output.write(mHighScore);
+                } catch (IOException e) {
+                    //in the case the save file is not present discards
+                }
+
+            }
             mPaused =true;
         }
 
@@ -325,10 +355,11 @@ class SnakeGame extends SurfaceView implements Runnable{
 
             // Set the size and color of the mPaint for the text
             mPaint.setColor(Color.argb(255, 255, 255, 255));
-            mPaint.setTextSize(120);
-
+            mPaint.setTextSize(70);
             // Draw the score
-            mCanvas.drawText("" + mScore, 20, 120, mPaint);
+            mCanvas.drawText("Score: " + mScore, 20, 100, mPaint);
+            mCanvas.drawText("HighScore: " + mHighScore, 20, 200, mPaint);
+
 
             // Draw the apple, snake, star, and obstacle
             this.mGoodApple.draw(mCanvas, mPaint);
@@ -336,6 +367,7 @@ class SnakeGame extends SurfaceView implements Runnable{
             mSnake.draw(mCanvas, mPaint);
             mStar.draw(mCanvas, mPaint);
             mObstacle.draw(mCanvas, mPaint);
+
 
             // Draw some text while paused
             if(mPaused){
