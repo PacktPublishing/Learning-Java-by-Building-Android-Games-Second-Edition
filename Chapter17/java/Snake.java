@@ -8,6 +8,8 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.view.MotionEvent;
+import android.os.Handler;
+import android.os.Looper;
 
 import java.util.ArrayList;
 
@@ -43,11 +45,16 @@ class Snake {
     // A bitmap for the body
     private Bitmap mBitmapBody;
 
+    // The snake's speed
+    private int speed;
 
     Snake(Context context, Point mr, int ss) {
 
         // Initialize our ArrayList
         segmentLocations = new ArrayList<>();
+
+        // Set the initial speed
+        speed = 1;
 
         // Initialize the segment size and movement
         // range from the passed in parameters
@@ -55,22 +62,15 @@ class Snake {
         mMoveRange = mr;
 
         // Create and scale the bitmaps
-        mBitmapHeadRight = BitmapFactory
-                .decodeResource(context.getResources(),
-                        R.drawable.head);
+        mBitmapHeadRight = createVersion(context, "head");
 
         // Create 3 more versions of the head for different headings
-        mBitmapHeadLeft = BitmapFactory
-                .decodeResource(context.getResources(),
-                        R.drawable.head);
+        //Separated the creating of different versions to improve readability and redundancy
+        mBitmapHeadLeft = createVersion(context, "head");
 
-        mBitmapHeadUp = BitmapFactory
-                .decodeResource(context.getResources(),
-                        R.drawable.head);
+        mBitmapHeadUp = createVersion(context, "head");
 
-        mBitmapHeadDown = BitmapFactory
-                .decodeResource(context.getResources(),
-                        R.drawable.head);
+        mBitmapHeadDown = createVersion(context, "head");
 
         // Modify the bitmaps to face the snake head
         // in the correct direction
@@ -82,27 +82,19 @@ class Snake {
         Matrix matrix = new Matrix();
         matrix.preScale(-1, 1);
 
-        mBitmapHeadLeft = Bitmap
-                .createBitmap(mBitmapHeadRight,
-                        0, 0, ss, ss, matrix, true);
+        mBitmapHeadLeft = modifySnakeHead(ss, matrix);
 
         // A matrix for rotating
         matrix.preRotate(-90);
-        mBitmapHeadUp = Bitmap
-                .createBitmap(mBitmapHeadRight,
-                        0, 0, ss, ss, matrix, true);
+        mBitmapHeadUp = modifySnakeHead(ss, matrix);
 
         // Matrix operations are cumulative
         // so rotate by 180 to face down
         matrix.preRotate(180);
-        mBitmapHeadDown = Bitmap
-                .createBitmap(mBitmapHeadRight,
-                        0, 0, ss, ss, matrix, true);
+        mBitmapHeadDown = modifySnakeHead(ss, matrix);
 
         // Create and scale the body
-        mBitmapBody = BitmapFactory
-                .decodeResource(context.getResources(),
-                        R.drawable.body);
+        mBitmapBody = createVersion(context, "body");
 
         mBitmapBody = Bitmap
                 .createScaledBitmap(mBitmapBody,
@@ -111,6 +103,21 @@ class Snake {
         // The halfway point across the screen in pixels
         // Used to detect which side of screen was pressed
         halfWayPoint = mr.x * ss / 2;
+    }
+    private Bitmap createVersion(Context context, String drawing){
+        switch(drawing){
+            case "head":
+                return BitmapFactory.decodeResource(context.getResources(), R.drawable.head);
+        }
+        return BitmapFactory.decodeResource(context.getResources(), R.drawable.body);
+    }
+    private Bitmap modifySnakeHead(int ss, Matrix matrix){
+        return Bitmap.createBitmap(mBitmapHeadRight,
+                0, 0, ss, ss, matrix, true);
+    }
+
+    public int getSegmentSize(){
+        return mSegmentSize;
     }
 
     // Get the snake ready for a new game
@@ -146,22 +153,40 @@ class Snake {
         // Move it appropriately
         switch (heading) {
             case UP:
-                p.y--;
+                p.y -= speed;
                 break;
 
             case RIGHT:
-                p.x++;
+                p.x += speed;
                 break;
 
             case DOWN:
-                p.y++;
+                p.y += speed;
                 break;
 
             case LEFT:
-                p.x--;
+                p.x -= speed;
                 break;
         }
 
+    }
+
+    // Consume star >> get boosted
+    private boolean isSpeedBoostActive = false;
+    void applySpeedBoost() {
+        // Increase the speed for a brief period
+        speed = 2;
+        isSpeedBoostActive = true;
+
+        // Using new imports to schedule a task to run after half a second of in-game time
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // Task to reset the snake's speed
+                speed = 1;
+                isSpeedBoostActive = false;
+            }
+        }, 500); // 500 = half a second
     }
 
     boolean detectDeath() {

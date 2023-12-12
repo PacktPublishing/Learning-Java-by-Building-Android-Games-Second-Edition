@@ -23,7 +23,7 @@ public class SnakeActivity extends Activity {
         display.getSize(size);
 
         // Create a new instance of the SnakeEngine class
-        mSnakeGame = new SnakeGame(this, size);
+        mSnakeGame = new SnakeGame(this, size, null);
 
         // Make snakeEngine the view of the Activity
         setContentView(mSnakeGame);
